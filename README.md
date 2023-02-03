@@ -1,32 +1,33 @@
-# halo2 [![Crates.io](https://img.shields.io/crates/v/halo2.svg)](https://crates.io/crates/halo2) #
+# halo2 CNN Model
 
-## [Documentation](https://docs.rs/halo2)
+This repository is a fork of https://github.com/zcash/halo2 with CNN model example.
 
-## Minimum Supported Rust Version
+The added module is CNNmodel with the Halo2 API. This is a non-official implementation of [Scaling up Trustless DNN Inference with Zero-Knowledge Proofs](https://arxiv.org/abs/2210.08674).
 
-Requires Rust **1.56.1** or higher.
+## Usage
 
-Minimum supported Rust version can be changed in the future, but it will be done with a
-minor version bump.
+First cd to the correct directory
 
-## Controlling parallelism
+```
+cd halo2_proofs
+```
 
-`halo2` currently uses [rayon](https://github.com/rayon-rs/rayon) for parallel computation.
-The `RAYON_NUM_THREADS` environment variable can be used to set the number of threads.
+Then run python file to generate the model parameters and input image and dump them and the excepted result on a text files
 
-## License
+```
+python examples/build_model.py
+```
 
-Licensed under either of
+Then run the halo2 verifier
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or
-   http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or http://opensource.org/licenses/MIT)
+```
+cargo run --example dnn-model
+```
 
-at your option.
+Both python and rs should print the values of the final layer in hex represntation and both of them are equal each other
 
-### Contribution
+## Future Work
 
-Unless you explicitly state otherwise, any contribution intentionally
-submitted for inclusion in the work by you, as defined in the Apache-2.0
-license, shall be dual licensed as above, without any additional terms or
-conditions.
+* Improve the implmentation of the lookup gate in ReLU (as it takes large verification time)
+* Improve the implmentation of the dot product to be a gate by itself without calling add, sub, and mull gates (this will improve verification time)
+* Reimplement the convolution by more optimized approch. As now it's O(C^2 * K^2 * H * W) but there are multiple optimized approahces, where C is the channel size, K is the kernel size, while H and W are the output height and width
